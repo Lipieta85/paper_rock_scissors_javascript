@@ -1,0 +1,43 @@
+{
+  "name": "m-7.5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:html",
+    "test:html": "globstar nu-html-checker *.html",
+    "init-project": "npm install && npm-run-all init:*",
+    "init:dirs": "mkdirp sass css vendor images js",
+    "init:files": "touch README.md index.html sass/style.scss js/script.js",
+    "init:gitignore": "curl https://raw.githubusercontent.com/github/gitignore/master/Node.gitignore -o .gitignore",
+    "build": "npm-run-all build:* test",
+    "build:clean": "rm -rf",
+    "build:sass": "node-sass --output-style compact -o css sass",
+    "build:autoprefixer": "autoprefixer-cli css/style.css",
+    "build-dev:sass": "node-sass --output-style expanded --source-map true -o css sass",
+    "watch": "npm-run-all build -p watch:*",
+    "watch:sassprefixer": "onchange sass/style.scss -- node-sass --output-style expanded --source-map true -o css sass -- autoprefixer-cli -o css/style.css",
+    "watch:browsersync": "browser-sync start --server --files css/*.css *.html *.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer-cli": "^1.0.0",
+    "browser-sync": "^2.24.3",
+    "globstar": "^1.0.0",
+    "node-sass": "^4.9.0",
+    "npm-run-all": "^4.1.2",
+    "nu-html-checker": "^0.1.0",
+    "onchange": "^4.0.0"
+  },
+  "dependencies": {
+    "flickity": "^2.1.1",
+    "flickity-hash": "^1.0.3",
+    "html5sortable": "^0.9.3",
+    "mkdirp": "^0.5.1",
+    "mustache": "^2.3.0",
+    "rimraf": "^2.6.2",
+    "sortablejs": "^1.7.0"
+  }
+}
