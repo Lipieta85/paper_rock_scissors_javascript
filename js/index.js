@@ -7,25 +7,48 @@ function printOutput(selector_id, text) {
 var newGameButton = document.getElementById('newGame');
 newGameButton.addEventListener('click', function () { newGame() })
 
-var pickPaper = document.getElementById('Paper');
-var pickRock = document.getElementById('Rock');
-var pickScissors = document.getElementById('Scissors');
+var playerChoose = document.querySelectorAll('.player-move');
 
-pickPaper.addEventListener('click', function () { playerMoveAction('Paper') })
-pickRock.addEventListener('click', function () { playerMoveAction('Rock') })
-pickScissors.addEventListener('click', function () { playerMoveAction('Scissors') })
+for (var i = 0; i < playerChoose.length; i++) {
+	playerChoose[i].addEventListener('click', function () {
+		playerMoveAction(this.getAttribute('data-move'));
+	});
+}
 
 var pickAllBtn = document.getElementById('pickElem');
 var newGameElem = document.getElementById('newGameElement');
 var resultsElem = document.getElementById('resultsTableElement');
 
-var playerScore;
-var computerScore;
+var params = {
+	playerScore: 0,
+	computerScore: 0,
+	roundNumber: 0,
+	ended: true,
+	//nrOfRounds: 0,
+	progress: []
+}
 
-var gameState = 'notStarted',
-	playerScore = 0,
-	computerScore = 0,
-	roundNumber = 0;
+var showModal = function (selector) {
+	document.querySelector('#' + selector).classList.add('show');
+	buildTable(selector);
+};
+
+var hideModal = function (selector) {
+	document.querySelector(selector).classList.remove('show');
+};
+
+var closeButtons = document.querySelectorAll('.modal');
+
+for (var i = 0; i < closeButtons.length; i++) {
+	closeButtons[i].addEventListener('click', function (event) {
+		hideModal('#' + event.currentTarget.className.split(' ')[1]);
+	});
+}
+
+var gameState = 'notStarted'
+	params.playerScore = 0,
+	params.computerScore = 0,
+	params.roundNumber = 0;
 
 function setGameElements() {
 	switch (gameState) {
@@ -34,11 +57,11 @@ function setGameElements() {
 			pickAllBtn.style.display = 'block';
 			resultsElem.style.display = 'block';
 			break;
-		case 'ended':
+		case 'params.ended':
 			newGameButton.innerText = 'Play Again';
 			pickAllBtn.style.display = 'none';
 			resultsElem.style.display = 'block';
-      break;
+			break;
 		case 'notStarted':
 		default:
 			newGameElem.style.display = 'block';
@@ -49,18 +72,18 @@ function setGameElements() {
 setGameElements();
 
 function newGame() {
-  
-  playerScore = 0;
-	computerScore = 0;
-	roundNumber = prompt('How many rounds will end the game?');
-	if (roundNumber < 99) {
+
+	params.playerScore = 0;
+	params.computerScore = 0;
+	params.roundNumber = prompt('How many rounds will end the game?');
+	if (params.roundNumber < 99) {
 		gameState = 'started';
 	}
-	if ((roundNumber === '') || (roundNumber === null)) {
+	if ((params.roundNumber === '') || (params.roundNumber === null)) {
 		gamestate = 'default'
 	}
-  
-	printOutput('numRoundToWin', roundNumber);
+
+	printOutput('numRoundToWin', params.roundNumber);
 	printOutput('result', '');
 	printOutput('result1', '');
 	setGameElements();
@@ -75,10 +98,10 @@ function playerMoveAction(playerMove) {
 
 	switch (isPlayerWin(playerMove, computerMove, )) {
 		case 1:
-			playerScore += 1
+			params.playerScore += 1
 			printOutput('result', 'Player Win');
-			if (playerScore == roundNumber) {
-				printOutput('result1', 'You Won entire game!');
+			if (params.playerScore == params.roundNumber) {
+				showModal('win')
 				gameState = 'ended';
 			};
 			break;
@@ -86,17 +109,17 @@ function playerMoveAction(playerMove) {
 			printOutput('result', 'Nobody Win');
 			break;
 		case -1:
-			computerScore += 1
+			params.computerScore += 1
 			printOutput('result', 'Computer Win');
-			if (computerScore == roundNumber) {
-				printOutput('result1', 'You lose!, computer won entire game');
+			if (params.computerScore == params.roundNumber) {
+				showModal('lost')
 				gameState = 'ended';
 			};
 			break;
 	};
 	setGameElements();
-	printOutput('playerScore', playerScore);
-	printOutput('computerScore', computerScore);
+	printOutput('playerScore', params.playerScore);
+	printOutput('computerScore', params.computerScore);
 };
 
 function isPlayerWin(playerMove, computerMove) {
@@ -107,4 +130,22 @@ function isPlayerWin(playerMove, computerMove) {
 		return 1;
 	}
 	return -1;
+};
+
+var buildTable = function (selector) {
+	var tbody = document.querySelector('#tbody-' + selector);
+	params.progress.forEach(function (progressResult) {
+		var row = document.createElement('tr');
+		tbody.appendChild(row);
+		for (var key in progressResult) {
+			buildTableTd(progressResult[key], row);
+		}
+	})
+};
+
+// this function build td in table
+var buildTableTd = function (value, row) {
+	var td = document.createElement('td');
+	td.innerHTML = value;
+	row.appendChild(td);
 };

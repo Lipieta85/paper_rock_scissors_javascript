@@ -1,40 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>A Pen by  Lipieta85</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
+    <meta charset="UTF-8">
+    <title>A Pen by Lipieta85</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <div id='newGameElement'>
-    <div>
-        <button id='newGame'>newGame</button>
-        <br>
-        <br>
+    <div id='newGameElement'>
+        <div>
+            <button id='newGame'>newGame</button>
+            <br>
+            <br>
+        </div>
     </div>
-</div>
-<div id='pickElem'>
-    <div>
-        <button id='Paper'>Paper</button>
-    </div>
+    <div id='pickElem'>
+        <div>
+            <button id='Paper' class=player-move data-move="Paper">Paper</button>
+        </div>
 
-    <div>
-        <button id='Rock'>Rock</button>
-    </div>
+        <div>
+            <button id='Rock' class=player-move data-move="Rock">Rock</button>
+        </div>
 
-    <div>
-        <button id="Scissors">Scissors</button>
+        <div>
+            <button id="Scissors" class=player-move data-move="Scissors">Scissors</button>
+        </div>
     </div>
-</div>
-<div id='resultsTableElement'>
+    <div id='resultsTableElement'>
         <br>
         <b>You picked: </b>
         <span id='output2'></span>
@@ -46,26 +41,59 @@
         <span id='result'></span>
         <br>
         <span id='result1'></span>
-    <p>
-        <b>User: </b>
-        <span id="playerScore">
-            </b>
-        </span>
-        <b>Computer: </b>
-        <span id="computerScore"></span>
-    </p>
-    <p>
-        <b>Number of rounds needed to win: </b>
-        <span id='numRoundToWin' </span>
-</div>
-  
-  
+        <p>
+            <b>User: </b>
+            <span id="playerScore">
+            </span>
+            <b>Computer: </b>
+            <span id="computerScore"></span>
+        </p>
+        <p>
+            <b>Number of rounds needed to win: </b>
+            <span id='numRoundToWin'></span>
+        </p>
+    </div>
+    
+        <div class="overlay" id="win">
+            <div class="modal win">
+                <a href="#"  class="close">x</a>
+                <header>Congratulations You won!</header>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ROUND NUMBER</th>
+                            <th>PLAYER MOVE</th>
+                            <th>COMPUTER MOVE</th>
+                            <th>GAME RESULT</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-win">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+            <div class="overlay" id="lost">
+                <div class="modal lost">
+                    <a href="#" class="close">x</a>
+                    <header>You lost, try one more time!</header>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ROUND NUMBER</th>
+                                <th>PLAYER MOVE</th>
+                                <th>COMPUTER MOVE</th>
+                                <th>GAME RESULT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-lost">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <script  src="js/index.js"></script>
-
-
-
-
+            
+        
+        <script src="js/index.js"></script>
 </body>
 
 </html>
