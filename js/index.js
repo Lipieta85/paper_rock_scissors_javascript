@@ -23,7 +23,6 @@ var params = {
 	playerScore: 0,
 	computerScore: 0,
 	roundNumber: 0,
-	ended: true,
 	//nrOfRounds: 0,
 	progress: []
 }
@@ -50,6 +49,21 @@ var gameState = 'notStarted'
 	params.computerScore = 0,
 	params.roundNumber = 0;
 
+const endGame = function () {
+	params.playerScore = 0;
+	params.computerScore = 0;
+	params.roundNumber = 0;
+	params.nrOfRounds = 0;
+
+	params.progress = [];
+	output2.innerHTML = '';
+	output3.innerHTML = '';
+	result.innerHTML = '';
+	result1.innerHTML = '';
+	numRoundToWin.innerHTML = '';
+}
+endGame();
+
 function setGameElements() {
 	switch (gameState) {
 		case 'started':
@@ -72,9 +86,8 @@ function setGameElements() {
 setGameElements();
 
 function newGame() {
-
-	params.playerScore = 0;
-	params.computerScore = 0;
+	
+	endGame();
 	params.roundNumber = prompt('How many rounds will end the game?');
 	if (params.roundNumber < 99) {
 		gameState = 'started';
@@ -102,6 +115,7 @@ function playerMoveAction(playerMove) {
 			printOutput('result', 'Player Win');
 			if (params.playerScore == params.roundNumber) {
 				showModal('win')
+				endGame();
 				gameState = 'ended';
 			};
 			break;
@@ -113,6 +127,7 @@ function playerMoveAction(playerMove) {
 			printOutput('result', 'Computer Win');
 			if (params.computerScore == params.roundNumber) {
 				showModal('lost')
+				endGame();
 				gameState = 'ended';
 			};
 			break;
@@ -120,6 +135,12 @@ function playerMoveAction(playerMove) {
 	setGameElements();
 	printOutput('playerScore', params.playerScore);
 	printOutput('computerScore', params.computerScore);
+	params.progress.push({
+		roundNumber: params.roundNumber,
+		playerMove: params.playerScore,
+		computerMove: params.computerScore,
+		finalResult: params.playerScore + ' - ' + params.computerScore
+	});
 };
 
 function isPlayerWin(playerMove, computerMove) {
@@ -134,16 +155,15 @@ function isPlayerWin(playerMove, computerMove) {
 
 var buildTable = function (selector) {
 	var tbody = document.querySelector('#tbody-' + selector);
-	params.progress.forEach(function (progressResult) {
+	params.progress.forEach(function (progressresult) {
 		var row = document.createElement('tr');
 		tbody.appendChild(row);
-		for (var key in progressResult) {
-			buildTableTd(progressResult[key], row);
+		for (var key in progressresult) {
+			buildTableTd(progressresult[key], row);
 		}
 	})
 };
 
-// this function build td in table
 var buildTableTd = function (value, row) {
 	var td = document.createElement('td');
 	td.innerHTML = value;
