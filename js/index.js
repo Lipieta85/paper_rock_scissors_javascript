@@ -23,7 +23,7 @@ var params = {
 	playerScore: 0,
 	computerScore: 0,
 	roundNumber: 0,
-	//nrOfRounds: 0,
+	endGame: true,
 	progress: []
 }
 
@@ -45,22 +45,22 @@ for (var i = 0; i < closeButtons.length; i++) {
 }
 
 var gameState = 'notStarted'
-	params.playerScore = 0,
+params.playerScore = 0,
 	params.computerScore = 0,
 	params.roundNumber = 0;
 
-const endGame = function () {
+var endGame = function () {
 	params.playerScore = 0;
 	params.computerScore = 0;
 	params.roundNumber = 0;
-	params.nrOfRounds = 0;
 
 	params.progress = [];
 	output2.innerHTML = '';
 	output3.innerHTML = '';
 	result.innerHTML = '';
 	result1.innerHTML = '';
-	numRoundToWin.innerHTML = '';
+	playerScore.innerHTML = '';
+	computerScore.innerHTML = '';
 }
 endGame();
 
@@ -75,6 +75,7 @@ function setGameElements() {
 			newGameButton.innerText = 'Play Again';
 			pickAllBtn.style.display = 'none';
 			resultsElem.style.display = 'block';
+			endGame();
 			break;
 		case 'notStarted':
 		default:
@@ -86,20 +87,26 @@ function setGameElements() {
 setGameElements();
 
 function newGame() {
-	
+
 	endGame();
 	params.roundNumber = prompt('How many rounds will end the game?');
-	if (params.roundNumber < 99) {
-		gameState = 'started';
-	}
-	if ((params.roundNumber === '') || (params.roundNumber === null)) {
-		gamestate = 'default'
-	}
+	if (params.roundNumber == '' || isNaN(params.roundNumber) || params.roundNumber <= 0) {
+		alert('Wrong Number');
+	} else {
+		if (params.roundNumber < 99) {
+			gameState = 'started';
+		}
+		if ((params.roundNumber === '') || (params.roundNumber === null)) {
+			gamestate = 'default'
+		}
+	
 
 	printOutput('numRoundToWin', params.roundNumber);
+	setGameElements();
+	}
 	printOutput('result', '');
 	printOutput('result1', '');
-	setGameElements();
+
 };
 
 function playerMoveAction(playerMove) {
@@ -114,9 +121,8 @@ function playerMoveAction(playerMove) {
 			params.playerScore += 1
 			printOutput('result', 'Player Win');
 			if (params.playerScore == params.roundNumber) {
-				showModal('win')
-				endGame();
 				gameState = 'ended';
+				showModal('win');
 			};
 			break;
 		case 0:
@@ -126,9 +132,8 @@ function playerMoveAction(playerMove) {
 			params.computerScore += 1
 			printOutput('result', 'Computer Win');
 			if (params.computerScore == params.roundNumber) {
-				showModal('lost')
-				endGame();
 				gameState = 'ended';
+				showModal('lost');
 			};
 			break;
 	};
@@ -136,9 +141,8 @@ function playerMoveAction(playerMove) {
 	printOutput('playerScore', params.playerScore);
 	printOutput('computerScore', params.computerScore);
 	params.progress.push({
-		roundNumber: params.roundNumber,
-		playerMove: params.playerScore,
-		computerMove: params.computerScore,
+		PlayerMove: playerMove,
+		ComputerMove: computerMove,
 		finalResult: params.playerScore + ' - ' + params.computerScore
 	});
 };
@@ -155,9 +159,11 @@ function isPlayerWin(playerMove, computerMove) {
 
 var buildTable = function (selector) {
 	var tbody = document.querySelector('#tbody-' + selector);
-	params.progress.forEach(function (progressresult) {
+	tbody.innerHTML = '';
+	params.progress.forEach(function (progressresult, index) {
 		var row = document.createElement('tr');
 		tbody.appendChild(row);
+		buildTableTd(index+1, row);
 		for (var key in progressresult) {
 			buildTableTd(progressresult[key], row);
 		}
