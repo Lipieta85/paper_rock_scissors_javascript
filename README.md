@@ -1,0 +1,1 @@
+https://lipieta85.github.io/paper_rock_scissors_javascript/
